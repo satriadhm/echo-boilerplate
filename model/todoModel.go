@@ -2,25 +2,22 @@ package model
 
 import (
 	"errors"
-	"sync"
 )
 
 var (
-	todos = map[int]*todo{}
-	seq   = 1
-	lock  = sync.Mutex{}
-
+	Todos           = map[int]*Todo{}
+	Seq             = 1
 	ErrtodoNotFound = errors.New("todo not found")
 )
 
 type (
-	todo struct {
+	Todo struct {
 		Name   string `json:"name"`
 		IsDone bool   `json:"isDone"`
 		Id     int    `json:"id"`
 	}
 
-	createTodoRequest struct {
+	CreateTodoRequest struct {
 		Name   string `json:"name"`
 		IsDone bool   `json:"isDone"`
 	}

@@ -23,10 +23,10 @@ func main() {
 
 	// Restricted group
 	r := e.Group("/restricted")
-
 	r.Use(echojwt.WithConfig(config.AuthConfig()))
-
 	r.GET("", auth.Restricted)
+
+	//routing CRUD
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
