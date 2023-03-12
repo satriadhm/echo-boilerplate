@@ -16,8 +16,6 @@ var Lock = sync.Mutex{}
 
 // NewTodoList ...
 func NewTodoList(c echo.Context) error {
-	Lock.Lock()
-	defer Lock.Unlock()
 	todo := &model.Todo{
 		Id: model.Seq,
 	}
@@ -35,12 +33,12 @@ func NewTodoList(c echo.Context) error {
 		return err
 	}
 	ctx := context.Background()
-	result, err2 := stmt.ExecContext(ctx, todo.Id, todo.Name, todo.IsDone)
+	result, err := stmt.ExecContext(ctx, todo.Id, todo.Name, todo.IsDone)
 	defer stmt.Close()
 
-	if err2 != nil {
-		fmt.Print(err2.Error())
-		return err2
+	if err != nil {
+		fmt.Print(err.Error())
+		return err
 	}
 	fmt.Println(result.LastInsertId())
 

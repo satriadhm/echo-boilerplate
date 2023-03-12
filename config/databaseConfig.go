@@ -9,20 +9,20 @@ import (
 
 var Db *sql.DB
 
-func DatabaseConfig() {
-	Db, err := sql.Open("mysql", "root:satria2133@tcp(127.0.0.1:3306)/test1")
+func DatabaseConfig() error {
+	Dbconn, err := sql.Open("mysql", "root:satria2133@tcp(127.0.0.1:3306)/test1")
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return err
 	} else {
 		fmt.Println("db is connected")
 	}
 	// make sure connection is available
-	err = Db.Ping()
+	err = Dbconn.Ping()
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return err
 	}
-	fmt.Print(Db)
-
+	Db = Dbconn
+	return nil
 }
