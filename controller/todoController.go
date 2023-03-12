@@ -26,7 +26,7 @@ func NewTodoList(c echo.Context) error {
 	}
 	model.Todos[todo.Id] = todo
 	model.Seq++
-
+	fmt.Println(config.Db == nil)
 	sql := "INSERT INTO todo(id, Name, isDone) VALUES(?, ?, ?)"
 	stmt, err := config.Db.Prepare(sql)
 
@@ -48,7 +48,6 @@ func NewTodoList(c echo.Context) error {
 		fmt.Print(err.Error())
 		return err
 	}
-	defer stmt.Close()
 	return c.JSON(http.StatusCreated, todo)
 }
 
