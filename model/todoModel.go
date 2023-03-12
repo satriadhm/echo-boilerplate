@@ -12,9 +12,9 @@ var (
 
 type (
 	Todo struct {
-		Name   string `json:"name"`
+		Id     int    `json:"Id"`
+		Name   string `json:"Name"`
 		IsDone bool   `json:"isDone"`
-		Id     int    `json:"id"`
 	}
 
 	CreateTodoRequest struct {

@@ -15,6 +15,10 @@ func main() {
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+	}))
 
 	// Login route
 	e.POST("/login", auth.Login)
@@ -22,6 +26,7 @@ func main() {
 	// Unauthenticated route
 	e.GET("/", auth.Accessible)
 
+	config.DatabaseConfig()
 	// Restricted group
 	r := e.Group("/restricted")
 	r.Use(echojwt.WithConfig(config.AuthConfig()))

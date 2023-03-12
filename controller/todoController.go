@@ -1,10 +1,13 @@
 package controller
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 	"sync"
 
+	"github.com/Satria2133/echo-CRUD/config"
 	"github.com/Satria2133/echo-CRUD/model"
 	"github.com/labstack/echo/v4"
 )
@@ -23,6 +26,29 @@ func NewTodoList(c echo.Context) error {
 	}
 	model.Todos[todo.Id] = todo
 	model.Seq++
+
+	sql := "INSERT INTO todo(id, Name, isDone) VALUES(?, ?, ?)"
+	stmt, err := config.Db.Prepare(sql)
+
+	if err != nil {
+		fmt.Print(err.Error())
+		return err
+	}
+	ctx := context.Background()
+	result, err2 := stmt.ExecContext(ctx, todo.Id, todo.Name, todo.IsDone)
+	defer stmt.Close()
+
+	if err2 != nil {
+		fmt.Print(err2.Error())
+		return err2
+	}
+	fmt.Println(result.LastInsertId())
+
+	if err != nil {
+		fmt.Print(err.Error())
+		return err
+	}
+	defer stmt.Close()
 	return c.JSON(http.StatusCreated, todo)
 }
 
