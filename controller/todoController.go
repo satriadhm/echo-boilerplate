@@ -54,6 +54,28 @@ func GetTodoList(c echo.Context) error {
 	Lock.Lock()
 	defer Lock.Unlock()
 	id, _ := strconv.Atoi(c.Param("id"))
+	sql := "SELECT * FROM todo WHERE id = ?"
+	stmt, err := config.Db.Prepare(sql)
+	if err != nil {
+		fmt.Print(err.Error())
+		return err
+	}
+	ctx := context.Background()
+	result, err := stmt.QueryContext(ctx, id)
+	defer stmt.Close()
+	if err != nil {
+		fmt.Print(err.Error())
+		return err
+	}
+	for result.Next() {
+		var todo model.Todo
+		err := result.Scan(&todo.Id, &todo.Name, &todo.IsDone)
+		if err != nil {
+			fmt.Print(err.Error())
+			return err
+		}
+
+	}
 	return c.JSON(http.StatusOK, model.Todos[id])
 }
 
@@ -66,9 +88,25 @@ func UpdateTodoList(c echo.Context) error {
 	if err := c.Bind(todo); err != nil {
 		return err
 	}
+	id, _ := strconv.Atoi(c.Param("id"))
+	sql := "UPDATE todo SET Name = ?, isDone = ? WHERE id = ?"
+	stmt, err := config.Db.Prepare(sql)
+	if err != nil {
+		fmt.Print(err.Error())
+		return err
+	}
+	ctx := context.Background()
+	result, err := stmt.ExecContext(ctx, todo.Name, todo.IsDone, id)
+	defer stmt.Close()
+	if err != nil {
+		fmt.Print(err.Error())
+		return err
+	}
+	fmt.Println(result.LastInsertId())
 	if _, ok := model.Todos[todo.Id]; !ok {
 		return echo.NewHTTPError(http.StatusNotFound, model.ErrtodoNotFound.Error())
 	}
+
 	model.Todos[todo.Id] = todo
 	return c.JSON(http.StatusOK, todo)
 }
@@ -79,6 +117,12 @@ func DeleteTodoList(c echo.Context) error {
 	Lock.Lock()
 	defer Lock.Unlock()
 	id, _ := strconv.Atoi(c.Param("id"))
+	delForm, err := config.Db.Prepare("DELETE FROM todo WHERE id=?")
+	if err != nil {
+		fmt.Print(err.Error())
+		return err
+	}
+	delForm.Exec(id)
 	if _, ok := model.Todos[id]; !ok {
 		return echo.NewHTTPError(http.StatusNotFound, model.ErrtodoNotFound.Error())
 	}
