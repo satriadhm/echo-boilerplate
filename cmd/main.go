@@ -40,8 +40,7 @@ func main() {
 		}))
 	}
 
-	// Database connection
-	db, err := config.ConnectDatabase(cfg.Database)
+	db, err := config.ConnectDatabase(*cfg)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}

@@ -48,8 +48,8 @@ func LoadConfig(path string) (*Config, error) {
 }
 
 // ConnectDatabase establishes a PostgreSQL database connection.
-func ConnectDatabase(cfg Config.Database) (*sql.DB, error) {
+func ConnectDatabase(cfg Config) (*sql.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Name)
+		cfg.Database.Host, cfg.Database.Port, cfg.Database.User, cfg.Database.Password, cfg.Database.Name)
 	return sql.Open("postgres", dsn)
 }
