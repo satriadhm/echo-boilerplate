@@ -1,16 +1,20 @@
 package usecase
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/satriadhm/echo-boilerplate/internal/auth/repository"
+)
 
 type AuthUsecase interface {
 	Login(username, password string) (string, error)
 }
 
 type authUsecase struct {
-	repo AuthRepository
+	repo repository.AuthRepository
 }
 
-func NewAuthUsecase(repo AuthRepository) AuthUsecase {
+func NewAuthUsecase(repo repository.AuthRepository) AuthUsecase {
 	return &authUsecase{repo: repo}
 }
 

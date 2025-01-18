@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/satriadhm/echo-boilerplate/internal/auth/usecase"
 )
 
 type AuthHandler struct {
-	usecase usecase.AuthUseCase
+	usecase usecase.AuthUsecase
 }
 
 func NewAuthHandler(e *echo.Echo, uc usecase.AuthUsecase) {

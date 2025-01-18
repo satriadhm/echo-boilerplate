@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/satriadhm/echo-boilerplate/internal/entities"
 	"github.com/satriadhm/echo-boilerplate/internal/todo/usecase"
 )
 
@@ -21,7 +22,7 @@ func NewTodoHandler(e *echo.Echo, uc usecase.TodoUsecase) {
 }
 
 func (h *TodoHandler) CreateTodo(c echo.Context) error {
-	todo := new(todo.Todo)
+	todo := new(entities.Todo)
 	if err := c.Bind(todo); err != nil {
 		return err
 	}
@@ -46,7 +47,7 @@ func (h *TodoHandler) GetTodo(c echo.Context) error {
 }
 
 func (h *TodoHandler) UpdateTodo(c echo.Context) error {
-	todo := new(todo.Todo)
+	todo := new(entities.Todo)
 	if err := c.Bind(todo); err != nil {
 		return err
 	}

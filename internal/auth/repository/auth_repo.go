@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"errors"
 )
 
@@ -9,17 +10,18 @@ type AuthRepository interface {
 }
 
 type authRepository struct {
-	db *config.Database
+	db *sql.DB
 }
 
-func NewAuthRepository(db *config.Database) AuthRepository {
+func NewAuthRepository(db *sql.DB) AuthRepository {
 	return &authRepository{db: db}
 }
 
 func (repo *authRepository) ValidateUser(username, password string) (bool, error) {
-	// This is a mock implementation. Replace with actual DB query.
-	if username == "jon" && password == "shhh!" {
-		return true, nil
+	row := repo.db.QueryRow("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?", username, password)
+	var count int
+	if err := row.Scan(&count); err != nil {
+		return false, errors.New("error validating user")
 	}
-	return false, errors.New("invalid credentials")
+	return count > 0, nil
 }
