@@ -1,0 +1,22 @@
+server:
+  port: ":1323"
+  readTimeout: 10s
+  writeTimeout: 10s
+
+database:
+  host: "127.0.0.1"
+  port: 3306
+  user: "root"
+  password: "password"
+  name: "test1"
+
+jwt:
+  secret: "supersecretkey"
+
+logging:
+  level: "info"
+  file: "logs/app.log"
+
+middlewares:
+  enableRequestLogging: true
+  enableJWT: true
