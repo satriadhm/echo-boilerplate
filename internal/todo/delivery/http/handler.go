@@ -5,8 +5,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/satriadhm-echo-boilerplate/internal/todo"
-	"github.com/satriadhm-echo-boilerplate/internal/todo/usecase"
+	"github.com/satriadhm/echo-boilerplate/internal/todo/usecase"
 )
 
 type TodoHandler struct {

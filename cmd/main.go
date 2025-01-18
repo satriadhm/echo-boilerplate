@@ -6,15 +6,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/satriadhm-echo-boilerplate/internal/auth/delivery/http"
-	authRepo "github.com/satriadhm-echo-boilerplate/internal/auth/repository"
-	authUsecase "github.com/satriadhm-echo-boilerplate/internal/auth/usecase"
-	"github.com/satriadhm-echo-boilerplate/internal/middleware"
-	todoHttp "github.com/satriadhm-echo-boilerplate/internal/todo/delivery/http"
-	todoRepo "github.com/satriadhm-echo-boilerplate/internal/todo/repository"
-	todoUsecase "github.com/satriadhm-echo-boilerplate/internal/todo/usecase"
-	"github.com/satriadhm-echo-boilerplate/pkg/config"
-	"github.com/satriadhm-echo-boilerplate/pkg/logger"
+	"github.com/satriadhm/echo-boilerplate/internal/auth/delivery/http"
+	"github.com/satriadhm/echo-boilerplate/pkg/config"
+	"github.com/satriadhm/echo-boilerplate/pkg/logger"
 )
 
 func main() {

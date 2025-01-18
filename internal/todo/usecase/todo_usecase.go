@@ -1,6 +1,6 @@
 package usecase
 
-import "github.com/satriadhm-echo-boilerplate/internal/todo/repository"
+import "github.com/satriadhm/echo-boilerplate/internal/todo/repository"
 
 type TodoUsecase interface {
 	Create(todo *Todo) error

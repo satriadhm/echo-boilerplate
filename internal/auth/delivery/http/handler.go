@@ -3,12 +3,11 @@ package http
 import (
 	"net/http"
 
-	"github.com/Satria2133/echo-CRUD/internal/auth/usecase"
 	"github.com/labstack/echo/v4"
 )
 
 type AuthHandler struct {
-	usecase usecase.AuthUsecase
+	usecase usecase.AuthUseCase
 }
 
 func NewAuthHandler(e *echo.Echo, uc usecase.AuthUsecase) {

@@ -3,8 +3,6 @@ package repository
 import (
 	"database/sql"
 	"errors"
-
-	"github.com/satriadhm-echo-boilerplate/internal/todo"
 )
 
 type TodoRepository interface {
