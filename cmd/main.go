@@ -6,14 +6,19 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/satriadhm/echo-boilerplate/internal/auth/delivery/http"
+	authHttp "github.com/satriadhm/echo-boilerplate/internal/auth/delivery/http"
+	authRepo "github.com/satriadhm/echo-boilerplate/internal/auth/repository"
+	authUsecase "github.com/satriadhm/echo-boilerplate/internal/auth/usecase"
+	todoHttp "github.com/satriadhm/echo-boilerplate/internal/todo/delivery/http"
+	todoRepo "github.com/satriadhm/echo-boilerplate/internal/todo/repository"
+	todoUsecase "github.com/satriadhm/echo-boilerplate/internal/todo/usecase"
 	"github.com/satriadhm/echo-boilerplate/pkg/config"
 	"github.com/satriadhm/echo-boilerplate/pkg/logger"
 )
 
 func main() {
 	// Load configuration
-	cfg, err := config.LoadConfig("configs/config.yaml")
+	cfg, err := config.LoadConfig("config.yaml.example")
 	if err != nil {
 		log.Fatalf("Failed to load configuration: %v", err)
 	}
@@ -25,9 +30,14 @@ func main() {
 	e := echo.New()
 
 	// Middleware
-	e.Use(middleware.ErrorHandler)
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 	if cfg.Middlewares.EnableRequestLogging {
-		e.Use(middleware.RequestLogger)
+		e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+			LogURI:    true,
+			LogStatus: true,
+			LogError:  true,
+		}))
 	}
 
 	// Database connection
@@ -45,13 +55,15 @@ func main() {
 	todoUC := todoUsecase.NewTodoUsecase(todoRepository)
 
 	// Routes setup
-	http.NewAuthHandler(e, authUC)
+	authHttp.NewAuthHandler(e, authUC)
 	todoHttp.NewTodoHandler(e, todoUC)
 
-	// Start the server
-	serverConfig := middleware.TimeoutMiddleware(cfg.Server.ReadTimeout, cfg.Server.WriteTimeout)
-	e.Server.ReadTimeout, _ = time.ParseDuration(cfg.Server.ReadTimeout)
-	e.Server.WriteTimeout, _ = time.ParseDuration(cfg.Server.WriteTimeout)
+	// Server configuration
+	readTimeout, _ := time.ParseDuration(cfg.Server.ReadTimeout)
+	writeTimeout, _ := time.ParseDuration(cfg.Server.WriteTimeout)
+	e.Server.ReadTimeout = readTimeout
+	e.Server.WriteTimeout = writeTimeout
 
+	// Start the server
 	e.Logger.Fatal(e.Start(cfg.Server.Port))
 }

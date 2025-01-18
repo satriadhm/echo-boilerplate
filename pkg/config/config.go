@@ -1,8 +1,11 @@
 package config
 
 import (
+	"database/sql"
+	"fmt"
 	"os"
 
+	_ "github.com/lib/pq"
 	"gopkg.in/yaml.v2"
 )
 
@@ -19,15 +22,16 @@ type Config struct {
 		Password string `yaml:"password"`
 		Name     string `yaml:"name"`
 	} `yaml:"database"`
-	Jwt struct {
-		Secret string `yaml:"secret"`
-	} `yaml:"jwt"`
 	Logging struct {
 		Level string `yaml:"level"`
 		File  string `yaml:"file"`
 	} `yaml:"logging"`
+	Middlewares struct {
+		EnableRequestLogging bool `yaml:"enableRequestLogging"`
+	} `yaml:"middlewares"`
 }
 
+// LoadConfig loads YAML configuration from a file.
 func LoadConfig(path string) (*Config, error) {
 	config := &Config{}
 	file, err := os.Open(path)
@@ -41,4 +45,11 @@ func LoadConfig(path string) (*Config, error) {
 		return nil, err
 	}
 	return config, nil
+}
+
+// ConnectDatabase establishes a PostgreSQL database connection.
+func ConnectDatabase(cfg Config.Database) (*sql.DB, error) {
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Name)
+	return sql.Open("postgres", dsn)
 }
